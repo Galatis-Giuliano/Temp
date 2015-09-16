@@ -1,0 +1,36 @@
+package org.usfirst.frc.team4.robot.commands;
+
+import org.usfirst.frc.team4.robot.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
+
+/**
+ *
+ */
+public class Pneumatics_Toggle extends Command {
+
+    public Pneumatics_Toggle() {}
+
+    protected void initialize() {
+	if (Robot.pneumatics.armOpen) {
+            Robot.pneumatics.armOpen();
+	} else {
+	    Robot.pneumatics.armClose();
+	}
+	
+    }
+
+    protected void execute() {}
+    
+    protected boolean isFinished() {
+        return true;
+    }
+
+    protected void end() {
+        Robot.pneumatics.armOpen = !Robot.pneumatics.armOpen;
+    }
+    
+    protected void interrupted() {
+        end();
+    }
+}

@@ -1,0 +1,87 @@
+package org.usfirst.frc.team4.robot;
+
+import org.usfirst.frc.team4.robot.commands.*;
+
+import edu.wpi.first.wpilibj.Joystick;
+
+
+
+public class OI {
+    
+    public OI () {
+//        RobotMap.driveA.whileHeld(new Drive_PID());
+//        RobotMap.driveL1.whileHeld(new Drive_Manual());
+        RobotMap.driveL1.whileHeld(new Drive_Underdrive());
+        RobotMap.driveR1.whileHeld(new Drive_Overdrive());
+        RobotMap.driveA .whileHeld(new Drive_PID());
+//        RobotMap.driveB .whileHeld(new Drive_TurnRight());
+//        RobotMap.driveX .whileHeld(new Drive_TurnLeft());
+        
+        RobotMap.opA.whenPressed(new Pneumatics_Toggle());
+        
+    }
+    
+    public boolean A(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_A);}
+    public boolean B(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_B);}
+    public boolean X(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_X);}
+    public boolean Y(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_Y);}
+    
+    public boolean L1(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_L1);}
+    public boolean R1(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_R1);}
+    
+    public boolean start (Joystick cont){return cont.getRawButton(RobotMap.CONT_START);}
+    public boolean select(Joystick cont){return cont.getRawButton(RobotMap.CONT_SELECT);}
+    
+    public double rightX(Joystick cont) {return lowPassFilter(cont.getRawAxis(RobotMap.CONT_RX), .2);}
+    public double rightY(Joystick cont) {return -lowPassFilter(cont.getRawAxis(RobotMap.CONT_RY), .2);}//Y axis needs to be inverted after comp
+    
+    public double leftX(Joystick cont)  {return lowPassFilter(cont.getRawAxis(RobotMap.CONT_LX), .2);}
+    public double leftY(Joystick cont)  {return -lowPassFilter(cont.getRawAxis(RobotMap.CONT_LY), .2);}//Y axis needs to be inverted after comp
+
+    public double parabolic(double number) {return number * Math.abs(number); }
+    
+    public double L2(Joystick cont){
+        return lowPassFilter(cont.getRawAxis(RobotMap.CONT_L2), .2);
+    }
+
+    public double R2(Joystick cont){
+        return lowPassFilter(cont.getRawAxis(RobotMap.CONT_R2), .2);
+    }
+    
+    public double L2(Joystick cont, double tolerance){
+    	return lowPassFilter(cont.getRawAxis(RobotMap.CONT_L2), tolerance);
+    }
+
+    public double R2(Joystick cont, double tolerance){
+        return lowPassFilter(cont.getRawAxis(RobotMap.CONT_R2), tolerance);
+    }
+    
+    public double L2(Joystick cont, boolean highPass, double tolerance){
+        if(highPass)    {return highPassFilter(cont.getRawAxis(RobotMap.CONT_L2), tolerance);}
+        else            {return lowPassFilter (cont.getRawAxis(RobotMap.CONT_L2), tolerance);}
+    }
+
+    public double R2(Joystick cont, boolean highPass, double tolerance){
+        if(highPass)    {return highPassFilter(cont.getRawAxis(RobotMap.CONT_R2), tolerance);}
+        else            {return lowPassFilter (cont.getRawAxis(RobotMap.CONT_R2), tolerance);}
+    }
+    
+    public boolean L3(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_L3);}
+    public boolean R3(Joystick cont) 	{return cont.getRawButton(RobotMap.CONT_R3);}
+    
+    public int POV(Joystick cont) {return cont.getPOV();}
+    
+    //Filters
+    public double lowPassFilter(double n, double tolerance)                        {return Math.abs(n) > tolerance? n : 0;}
+
+    public double midPassFilter(double value, double exact, double tolerance)      {return Math.abs(value - exact) < tolerance? exact : value;}
+
+    public boolean withinTolerance(double value, double exact, double tolerance)   {return Math.abs(value - exact) < tolerance;}
+
+    public static double highPassFilter(double n, double tolerance){
+        if      (n > 1 - tolerance) {return  1;}
+        else if (n < tolerance - 1) {return -1;}
+        else {return n;}
+    }
+}
+
