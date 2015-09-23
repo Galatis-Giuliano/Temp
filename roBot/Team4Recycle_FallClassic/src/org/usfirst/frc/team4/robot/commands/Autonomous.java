@@ -7,6 +7,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class Autonomous extends CommandGroup {
     
     public  Autonomous() {
+    	
+    	addSequential(new Pneumatics_ClawToggle());
+    	addSequential(new Elevator_Lift(), 1);
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -27,7 +30,7 @@ public class Autonomous extends CommandGroup {
 //        addSequential(new Drive_PID(0, 180), 10);
 //        addSequential(new Elevator_Lift(), .5);
 //        addSequential(new Wait(), 1);
-        addSequential(new Drive_PID(-6));
+        //addSequential(new Drive_PID(-6));
     	
     }
 }
